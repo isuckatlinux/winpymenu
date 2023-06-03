@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 import msvcrt
 from ..winpyterminal import print_lines, delete_lines
-from ..winpycolors import WinPyColors
+from ..winpycolors import WinPyColors, WinPyStyles, ENDC
 from ..winpymath import clamp
 
 @dataclass
@@ -11,6 +11,8 @@ class WinPySimpleMenu:
     prechar:str = "> "
     clear_terminal:bool = False
     clear_on_exit:bool = True
+    selected_color:WinPyColors = ""
+    selected_style:WinPyStyles = WinPyStyles.UNDERLINE
     _selected_option:int = default_option
     _lines_printed:int = 0
 
@@ -21,8 +23,8 @@ class WinPySimpleMenu:
         for index, option in enumerate(self.options):
             temp_option = option
             if index == self._selected_option:
-                temp_option = WinPyColors.UNDERLINE + temp_option
-            temp_option = self.prechar + temp_option + WinPyColors.ENDC
+                temp_option = self.selected_color + self.selected_style + temp_option
+            temp_option = self.prechar + temp_option + ENDC
             temp_printable_options.append(temp_option)
         return temp_printable_options
 

@@ -1,1 +1,1 @@
-from .winpycolors import WinPyColors
+from .winpycolors import WinPyColors, ENDC, WinPyStyles
