@@ -39,8 +39,6 @@ class WinPySimpleMenu:
                         self._selected_option -= 1
                     elif arrow_key == b'P':
                         self._selected_option += 1
-                    else:
-                        print(arrow_key)
                     self._selected_option = clamp(self._selected_option, 0, len(self.options)-1)
                 elif key == b'\r':
                     return self._selected_option
