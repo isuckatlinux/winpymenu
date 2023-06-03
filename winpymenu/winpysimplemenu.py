@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 import msvcrt
-from ..winpyterminal import print_lines, delete_lines
-from ..winpycolors import WinPyColors, WinPyStyles, ENDC
-from ..winpymath import clamp
+from .winpyterminal import print_lines, delete_lines
+from .winpycolors import WinPyColors, WinPyStyles, ENDC
+from .winpymath import clamp
 
 @dataclass
 class WinPySimpleMenu:

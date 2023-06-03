@@ -1,1 +1,0 @@
-from .winpysimplemenu import WinPySimpleMenu
