@@ -10,11 +10,11 @@
 name: Upload Python Package
 
 on:
-  release:
+  workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
