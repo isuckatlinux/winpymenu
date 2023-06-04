@@ -11,6 +11,5 @@ jobs:
 
     steps:
       - name: compiling
-        run: cd ..
-        run: python3 setup.py sdist bdist_wheel
+        run: cd ..; python3 setup.py sdist bdist_wheel
 
