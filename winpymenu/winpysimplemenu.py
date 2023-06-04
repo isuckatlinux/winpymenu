@@ -3,13 +3,13 @@ import msvcrt
 from .winpyterminal import print_lines, delete_lines
 from .winpycolors import WinPyColors, WinPyStyles, ENDC
 from .winpymath import clamp
+import os
 
 @dataclass
 class WinPySimpleMenu:
     options:list[str]
     default_option:int = 0
     prechar:str = "> "
-    clear_terminal:bool = False
     clear_on_exit:bool = True
     selected_color:WinPyColors = ""
     selected_style:WinPyStyles = WinPyStyles.UNDERLINE
@@ -26,9 +26,12 @@ class WinPySimpleMenu:
                 temp_option = self.selected_color + self.selected_style + temp_option
             temp_option = self.prechar + temp_option + ENDC
             temp_printable_options.append(temp_option)
+        
+
         return temp_printable_options
 
     def show(self):
+        os.system("cls")
         self._lines_printed = print_lines(self._pritable_options)
         while True:
             if msvcrt.kbhit():
@@ -41,6 +44,7 @@ class WinPySimpleMenu:
                         self._selected_option += 1
                     self._selected_option = clamp(self._selected_option, 0, len(self.options)-1)
                 elif key == b'\r':
+                    delete_lines(self._lines_printed)
                     return self._selected_option
 
                 delete_lines(self._lines_printed)
