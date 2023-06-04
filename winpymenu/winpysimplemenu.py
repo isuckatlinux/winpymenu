@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import msvcrt
-from .winpyterminal import print_lines, delete_lines, delete_all_lines, cursor_backwards, is_decodable
+from .winpyterminal import print_lines, delete_lines, delete_all_lines, cursor_backwards, is_decodable, clear_terminal
 from .winpycolors import WinPyColors, WinPyStyles, ENDC
 from .winpymath import clamp
 import os
@@ -39,10 +39,13 @@ class WinPySimpleMenu:
         temp_option:str
         temp_printable_options:list = []
 
-        for index, option in enumerate(self.options):
+        available_options:list[str] = []
+        for option in self.options:
+            if re.match(re.escape(self._searching_buffer[1:]), option):
+                available_options.append(option)
+
+        for index, option in enumerate(available_options):
             temp_option = option
-            if not re.match(re.escape(self._searching_buffer[1:]), temp_option):
-                continue
             if index == self._selected_option:
                 temp_option = self.selected_color + self.selected_style + temp_option
             temp_option = self.prechar + temp_option + ENDC
@@ -59,13 +62,13 @@ class WinPySimpleMenu:
 
 
     def show(self):
-        os.system("cls")
+        clear_terminal()
         print_lines(self._pritable_options, self._searching_buffer)
         while True:
             if self._terminal_resized:
                 self._terminal_last_line_size = os.get_terminal_size().lines
                 self._terminal_last_column_size = os.get_terminal_size().columns
-                os.system("cls")
+                clear_terminal()
                 print_lines(self._pritable_options, self._searching_buffer)
 
             if msvcrt.kbhit():
@@ -76,7 +79,7 @@ class WinPySimpleMenu:
                         self._selected_option -= 1
                     elif special_key == b'P':
                         self._selected_option += 1
-                    self._selected_option = clamp(self._selected_option, 0, len(self.options)-1)
+                    self._selected_option = clamp(self._selected_option, 0, len(self._pritable_options)-1)
                 elif key == b'\r':
                     delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
                     return self._selected_option
@@ -92,6 +95,7 @@ class WinPySimpleMenu:
 
                     elif is_decodable(key) and key.decode() in string.printable:
                         self._searching_buffer += key.decode()
-                    
+
+                self._selected_option = clamp(self._selected_option, 0, len(self._pritable_options)-1)
                 delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
                 print_lines(self._pritable_options, self._searching_buffer)
