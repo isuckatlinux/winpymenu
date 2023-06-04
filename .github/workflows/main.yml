@@ -1,1 +1,17 @@
+name: Después del Merge
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v2
+
+      - name: Ejecutar algo después del merge
+        run: echo "test"
