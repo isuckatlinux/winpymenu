@@ -41,7 +41,13 @@ def delete_all_lines(searching_buffer:str, lines:int):
             print(f"{CURSOR_UP_ONE}", end="")
 
 
-def cursor_backwards():
-    print(CURSOR_BACKWARD, end="")
+def cursor_backwards(times:int=1):
+    print(CURSOR_BACKWARD*times, end="")
 
-    
+
+def is_decodable(byte:bytes, encoding='utf-8'):
+    try:
+        byte.decode(encoding)
+        return True
+    except UnicodeDecodeError:
+        return False

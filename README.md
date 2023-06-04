@@ -22,9 +22,9 @@ menu.show()
 ## Available modules
 ### Curent available
 * winpysimplemenu
+* searching
 
 ### Available in the future
-* searching (currently working)
 * winpymultiselectmenu
 * winpytreemenu
 * crossplatform (only available in Windows at the moment)
