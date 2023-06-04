@@ -1,15 +1,1 @@
-name: Upload yo pypi
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: compiling
-        run: python3 setup.py sdist bdist_wheel
 
