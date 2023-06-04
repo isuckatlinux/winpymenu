@@ -11,4 +11,4 @@ jobs:
 
     steps:
       - name: compiling
-      - run: echo "hola"
+        run: echo "hola"
