@@ -11,5 +11,4 @@ jobs:
 
     steps:
       - name: compiling
-          run "python .\setup.py sdist bdist_wheel
-          run echo "hola"
+      - run: echo "hola"
