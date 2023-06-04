@@ -2,3 +2,6 @@ __pycache__
 tests*.py
 .vscode/
 printable.txt
+build/
+dist/
+winpymenu.egg-info/

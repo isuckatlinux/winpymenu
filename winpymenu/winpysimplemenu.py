@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 import msvcrt
-from .winpyterminal import print_lines, delete_lines, delete_all_lines, cursor_backwards, is_decodable, clear_terminal
-from .winpycolors import WinPyColors, WinPyStyles, ENDC
-from .winpymath import clamp
 import os
 import string
 import re
+from .winpyterminal import print_lines, delete_lines, delete_all_lines, cursor_backwards, is_decodable, clear_terminal
+from .winpycolors import WinPyColors, WinPyStyles, ENDC
+from .winpymath import clamp
 
 
 @dataclass
