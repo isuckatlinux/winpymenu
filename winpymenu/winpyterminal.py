@@ -51,3 +51,7 @@ def is_decodable(byte:bytes, encoding='utf-8'):
         return True
     except UnicodeDecodeError:
         return False
+    
+
+def clear_terminal():
+    os.system("cls")
