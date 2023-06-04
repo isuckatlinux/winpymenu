@@ -1,4 +1,4 @@
-name: Después del Merge
+name: Upload yo pypi
 
 on:
   push:
@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código fuente
-        uses: actions/checkout@v2
-
-      - name: Ejecutar algo después del merge
-        run: echo "test"
+      - name: compiling
+          python .\setup.py sdist bdist_wheel
+          ls
