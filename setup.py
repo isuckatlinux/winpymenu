@@ -17,5 +17,7 @@ setup(
     author="Pedro García & Yohan Díaz",
     author_email="pedroluisgarciamontil@gmail.com",
     packages=find_packages(),
-    keywords=["menu", "cli"]
+    keywords=["menu", "cli"],
+    long_description="long description",
+    description="description"
 )
