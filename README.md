@@ -27,3 +27,4 @@ menu.show()
 * searching (currently working)
 * winpymultiselectmenu
 * winpytreemenu
+* crossplatform (only available in Windows at the moment)
