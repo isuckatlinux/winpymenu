@@ -7,6 +7,17 @@ import os
 
 @dataclass
 class WinPySimpleMenu:
+    """ Simple CLI menu for windows
+
+    Args:
+        options (list[str]): List of the options for the menu
+        default_option (int): Deafult option that will be highlihged
+        prechar (str): Prechar for the options. Defaults to "> "
+        clear_on_exit (bool): Clear console in exit of the menu. Defaults on True
+        selected_color (WinPyColors): Color of the selected option. Defaults to None
+        selected_style (WinPyStyles): Font style pf the seletect option. Defaults to None
+    
+    """
     options:list[str]
     default_option:int = 0
     prechar:str = "> "
