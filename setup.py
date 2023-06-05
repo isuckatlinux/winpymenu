@@ -7,17 +7,29 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = "0.1.0"
-DESCRIPTION = "Python cli menu for python"
+NAME = "winpymenu"
+VERSION = "0.1.1-alpha"
+DESCRIPTION = "Python library for console menu in Windows"
 
 
 setup(
-    name="winpymenu",
+    name=NAME,
     version=VERSION,
     author="Pedro García & Yohan Díaz",
-    author_email="pedroluisgarciamontil@gmail.com",
+    author_email="pedroluisgarciamontil@gmail.com, yohan.diaz5632@gmail.com",
+    url="https://github.com/isuckatlinux/winpymenu",
     packages=find_packages(),
-    keywords=["menu", "cli"],
-    long_description="long description",
-    description="description"
+    description=DESCRIPTION,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    license="MIT",
+    keywords=["menu", "cli", "python", "windows", "console", "terminal", "interactive", "display", "text menu", "library", "selection"],
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Operating System :: Microsoft :: Windows',
+        'Programming Language :: Python',
+        'Topic :: Software Development'
+    ]
 )

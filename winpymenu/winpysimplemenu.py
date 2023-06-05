@@ -27,22 +27,23 @@ class WinPySimpleMenu:
     clear_on_exit:bool = True
     selected_color:WinPyColors = ""
     selected_style:WinPyStyles = WinPyStyles.UNDERLINE
+    
     _selected_option:int = default_option
-
     _searching_buffer:str = ""
 
     _terminal_last_line_size:int = os.get_terminal_size().lines
     _terminal_last_column_size:int = os.get_terminal_size().columns
 
     @property
-    def _pritable_options(self):
+    def _printable_options(self):
         temp_option:str
         temp_printable_options:list = []
 
         available_options:list[str] = []
-        for option in self.options:
-            if re.match(re.escape(self._searching_buffer[1:]), option):
-                available_options.append(option)
+        if self._searching:
+            for option in self.options:
+                if re.match(re.escape(self._searching_buffer[1:]), option):
+                    available_options.append(option)
 
         for index, option in enumerate(available_options):
             temp_option = option
@@ -53,23 +54,22 @@ class WinPySimpleMenu:
         return temp_printable_options
     
     @property
-    def _terminal_resized(self):
+    def _terminal_resized(self) -> bool:
         return os.get_terminal_size().lines != self._terminal_last_line_size or os.get_terminal_size().columns != self._terminal_last_column_size
 
     @property
     def _searching(self) -> bool:
         return len(self._searching_buffer) > 0
 
-
     def show(self):
         clear_terminal()
-        print_lines(self._pritable_options, self._searching_buffer)
+        print_lines(self._printable_options, self._searching_buffer)
         while True:
             if self._terminal_resized:
                 self._terminal_last_line_size = os.get_terminal_size().lines
                 self._terminal_last_column_size = os.get_terminal_size().columns
                 clear_terminal()
-                print_lines(self._pritable_options, self._searching_buffer)
+                print_lines(self._printable_options, self._searching_buffer)
 
             if msvcrt.kbhit():
                 key = msvcrt.getch()
@@ -79,14 +79,20 @@ class WinPySimpleMenu:
                         self._selected_option -= 1
                     elif special_key == b'P':
                         self._selected_option += 1
-                    self._selected_option = clamp(self._selected_option, 0, len(self._pritable_options)-1)
+                    self._selected_option = clamp(self._selected_option, 0, len(self._printable_options)-1)
+                
                 elif key == b'\r':
-                    delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
+                    if self.clear_on_exit:
+                        delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
+                    else:
+                        delete_lines(lines=os.get_terminal_size().lines - len(self.options))
                     return self._selected_option
+                
                 elif key == b'/' and not self._searching:
                     self._searching_buffer = "/"
+                
                 elif self._searching:
-                    if key == b'\x08':
+                    if key == b'\x08': # tecla de borrar
                         char_to_remove = self._searching_buffer[-1]
                         self._searching_buffer = self._searching_buffer[:-1]
                         if char_to_remove.encode() == b'\t':
@@ -96,6 +102,6 @@ class WinPySimpleMenu:
                     elif is_decodable(key) and key.decode() in string.printable:
                         self._searching_buffer += key.decode()
 
-                self._selected_option = clamp(self._selected_option, 0, len(self._pritable_options)-1)
+                self._selected_option = clamp(self._selected_option, 0, len(self._printable_options)-1)
                 delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
-                print_lines(self._pritable_options, self._searching_buffer)
+                print_lines(self._printable_options, self._searching_buffer)
