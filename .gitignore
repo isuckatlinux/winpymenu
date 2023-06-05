@@ -5,3 +5,4 @@ printable.txt
 build/
 dist/
 winpymenu.egg-info/
+test.py

@@ -1,4 +1,4 @@
-# winpymenu
+# multipymenu
 Python cli menu for python
 
 # Usage
