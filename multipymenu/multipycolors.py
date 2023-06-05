@@ -1,6 +1,4 @@
-ENDC = '\033[0m'
-
-class WinPyColors:
+class MultiPyColors:
     BLACK = '\033[30m'
     RED = '\033[31m'
     GREEN = '\033[32m'
@@ -10,8 +8,7 @@ class WinPyColors:
     CYAN = '\033[36m'
     WHITE = '\033[37m'
 
-
-class WinPyBackgrounds:
+class MultiPyBackgrounds:
     BG_BLACK = '\033[40m'
     BG_RED = '\033[41m'
     BG_GREEN = '\033[42m'
@@ -21,8 +18,10 @@ class WinPyBackgrounds:
     BG_CYAN = '\033[46m'
     BG_WHITE = '\033[47m'
 
-class WinPyStyles:
+class MultiPyStyles:
     BOLD = '\033[1m'  # Negrita
     UNDERLINE = '\033[4m'  # Subrayado
     ITALIC = '\033[3m'  # Cursiva
     STRIKETHROUGH = '\033[9m'  # Tachado
+
+ENDC = '\033[0m' # Terminar el estilo
