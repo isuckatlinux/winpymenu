@@ -1,14 +1,18 @@
-def check_password(password):
-    hardcoded_password = "MySecretPassword"
+import os
 
-    if password == hardcoded_password:
-        return True
-    else:
-        return False
+def process_file(file_path):
+    secret_key = "MySecretKey"
 
-# Test the check_password function
-user_input = input("Enter a password: ")
-if check_password(user_input):
-    print("Access granted!")
-else:
-    print("Access denied!")
+    # Process the file
+    with open(file_path, 'r') as file:
+        contents = file.read()
+
+    encrypted_data = encrypt(contents, secret_key)
+
+
+def encrypt(data, key):
+    pass
+
+# Main code
+file_path = input("Enter file path: ")
+process_file(file_path)
