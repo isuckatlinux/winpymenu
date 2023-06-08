@@ -69,4 +69,4 @@ jobs:
       - name: Display CodeQL Analysis Results
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: ${{ github.workspace }}/.codeql/codeql-sarif-results/codeql-result.sarif
+          sarif_file: ${{ github.workspace }}/home/runner/work/winpymenu/results/python.sarif
