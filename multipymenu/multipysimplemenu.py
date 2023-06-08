@@ -46,8 +46,9 @@ class MultiPySimpleMenu:
 
         available_options:list[str] = []
 
-        # If the user is searching at the moment, filter the options using the searching buffer
+         # Checks if searching is active, that is to say, user has typed at least /
         if self._searching:
+            # Filter options based on search pattern
             for option in self.options:
                 if re.match(re.escape(self._searching_buffer[1:]), option):
                     available_options.append(option)
@@ -70,13 +71,20 @@ class MultiPySimpleMenu:
 
     @property
     def _searching(self) -> bool:
-        """Returns true if the user is searching"""
+        """Check if searching is active by checking the length of the searching buffer"""
         return len(self._searching_buffer) > 0
 
     def show(self):
-        """Shows the printable options"""
-        clear_terminal()
-        print_lines(self._printable_options, self._searching_buffer)
+        """ Displays the menu and handles user interactions.
+
+            This method clears the terminal and prints the menu options. It continuously listens for keyboard input from the user.
+            The menu supports arrow key navigation, search functionality, and the Enter key to select an option.
+
+            Returns:
+                int: The index of the selected option.
+                clear_terminal()
+                print_lines(self._printable_options, self._searching_buffer)
+        """
 
         while True:
             # Checks if the terminal has been resized
@@ -95,17 +103,21 @@ class MultiPySimpleMenu:
                         self._selected_option -= 1
                     elif special_key == b'P': # Arrow down key
                         self._selected_option += 1
+
+                    # Keep the selected option within the valid range
                     self._selected_option = clamp(self._selected_option, 0, len(self._printable_options)-1)
                 
                 # Checks for the return key
                 elif key == b'\r':
                     if self.clear_on_exit:
+                        # Delete all lines including the searching buffer
                         delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
                     else:
+                        # Delete lines below the menu options
                         delete_lines(lines=os.get_terminal_size().lines - len(self.options)-1)
                     return self._selected_option
                 
-                # Checks if key / has been pressed
+                # Checks if key / has been pressed to start searching
                 elif key == b'/' and not self._searching:
                     self._searching_buffer = "/"
                 
@@ -123,7 +135,8 @@ class MultiPySimpleMenu:
                     elif is_decodable(key) and key.decode() in string.printable:
                         self._searching_buffer += key.decode()
 
-                # Checks the selected option
+                # Keep the selected option within the valid range
                 self._selected_option = clamp(self._selected_option, 0, len(self._printable_options)-1)
+                
                 delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
                 print_lines(self._printable_options, self._searching_buffer)

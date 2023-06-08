@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 class MultiPyColors:
     BLACK = '\033[30m'
     RED = '\033[31m'
@@ -19,9 +21,9 @@ class MultiPyBackgrounds:
     BG_WHITE = '\033[47m'
 
 class MultiPyStyles:
-    BOLD = '\033[1m'  # Negrita
-    UNDERLINE = '\033[4m'  # Subrayado
-    ITALIC = '\033[3m'  # Cursiva
-    STRIKETHROUGH = '\033[9m'  # Tachado
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    ITALIC = '\033[3m'
+    STRIKETHROUGH = '\033[9m'
 
-ENDC = '\033[0m' # Terminar el estilo
+ENDC = '\033[0m' # Ending style
