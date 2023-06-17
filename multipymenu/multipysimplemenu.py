@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
-import msvcrt
 import os
 import string
 import re
 from .multipyterminal import print_lines, delete_lines, delete_all_lines, cursor_backwards, is_decodable, clear_terminal
 from .multipycolors import MultiPyColors, MultiPyStyles, ENDC
 from .multipymath import clamp
+from .multipykeystrokes import MultiPyKeyStrokes
 
 
 @dataclass
@@ -36,6 +36,9 @@ class MultiPySimpleMenu:
 
     # Size in columns of the terminal
     _terminal_last_column_size:int = os.get_terminal_size().columns
+
+    # Operating system
+    _platform:str = os.name
 
     
     @property
@@ -86,57 +89,73 @@ class MultiPySimpleMenu:
                 print_lines(self._printable_options, self._searching_buffer)
         """
 
-        while True:
-            # Checks if the terminal has been resized
-            if self._terminal_resized:
-                self._terminal_last_line_size = os.get_terminal_size().lines
-                self._terminal_last_column_size = os.get_terminal_size().columns
-                clear_terminal()
-                print_lines(self._printable_options, self._searching_buffer)
+        kshandler = MultiPyKeyStrokes()
+        kshandler.init()
 
-            # Checks for a key stroke
-            if msvcrt.kbhit():
-                key = msvcrt.getch()
-                if key == b'\xe0': # If it's a special key
-                    special_key = msvcrt.getch()
-                    if special_key == b'H': # Arrow up key
-                        self._selected_option -= 1
-                    elif special_key == b'P': # Arrow down key
-                        self._selected_option += 1
+        print_lines(self._printable_options, self._searching_buffer)
+
+        try:
+            while True:
+                # Checks if the terminal has been resized
+                if self._terminal_resized:
+                    self._terminal_last_line_size = os.get_terminal_size().lines
+                    self._terminal_last_column_size = os.get_terminal_size().columns
+                    clear_terminal()
+                    print_lines(self._printable_options, self._searching_buffer)
+
+                # Checks for a key stroke
+                key = kshandler.readch()
+
+                """kshandler.deinit()
+                print(repr(key))
+                print(repr(kshandler.getkey(key)))
+                exit()"""
+                
+                if kshandler.kbhit(key):
+                    if kshandler.specialkey(key): # If it's a special key
+                        if kshandler.getkey(key) == "KEY_UP": # Arrow up key
+                            self._selected_option -= 1
+                        elif kshandler.getkey(key) == "KEY_DOWN": # Arrow down key
+                            self._selected_option += 1
+
+                        # Keep the selected option within the valid range
+                        self._selected_option = clamp(self._selected_option, 0, len(self._printable_options)-1)
+                    
+                    # Checks for the return key
+                    elif kshandler.getkey(key) == "RETURN":
+                        if self.clear_on_exit:
+                            # Delete all lines including the searching buffer
+                            delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
+                        else:
+                            # Delete lines below the menu options
+                            delete_lines(lines=os.get_terminal_size().lines - len(self.options)-1)
+                        return self._selected_option
+                        
+                    # Checks if key / has been pressed to start searching
+                    elif kshandler.getkey(key) == "SLASH" and not self._searching:
+                        self._searching_buffer = "/"
+                        
+                        # Checks if user is searching
+                    elif self._searching:
+                        if kshandler.getkey(key) == "BACKSPACE": # backspace key
+                            char_to_remove = self._searching_buffer[-1]
+                            self._searching_buffer = self._searching_buffer[:-1]
+                            if char_to_remove.encode() == b'\t': # In case character to be deleted is a TAB
+                                cursor_backwards(times=7)
+                            else:
+                                cursor_backwards()
+
+                        # If key added is decodable and is printable, add it to the buffer
+                        elif self._platform == "nt" and is_decodable(key) and key.decode() in string.printable:
+                            self._searching_buffer += key.decode()
+                        
+                        elif self._platform == "posix" and key in string.printable:
+                            self._searching_buffer += key
 
                     # Keep the selected option within the valid range
                     self._selected_option = clamp(self._selected_option, 0, len(self._printable_options)-1)
-                
-                # Checks for the return key
-                elif key == b'\r':
-                    if self.clear_on_exit:
-                        # Delete all lines including the searching buffer
-                        delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
-                    else:
-                        # Delete lines below the menu options
-                        delete_lines(lines=os.get_terminal_size().lines - len(self.options)-1)
-                    return self._selected_option
-                
-                # Checks if key / has been pressed to start searching
-                elif key == b'/' and not self._searching:
-                    self._searching_buffer = "/"
-                
-                # Checks if user is searching
-                elif self._searching:
-                    if key == b'\x08': # backspace key
-                        char_to_remove = self._searching_buffer[-1]
-                        self._searching_buffer = self._searching_buffer[:-1]
-                        if char_to_remove.encode() == b'\t': # In case character to be deleted is a TAB
-                            cursor_backwards(times=7)
-                        else:
-                            cursor_backwards()
-
-                    # If key added is decodable and is printable, add it to the buffer
-                    elif is_decodable(key) and key.decode() in string.printable:
-                        self._searching_buffer += key.decode()
-
-                # Keep the selected option within the valid range
-                self._selected_option = clamp(self._selected_option, 0, len(self._printable_options)-1)
-                
-                delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
-                print_lines(self._printable_options, self._searching_buffer)
+                        
+                    delete_all_lines(self._searching_buffer, self._terminal_last_line_size)
+                    print_lines(self._printable_options, self._searching_buffer)
+        finally:
+            kshandler.deinit()
