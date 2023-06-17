@@ -1,4 +1,4 @@
-""" Files that constains multiple math functions
+""" Files that contains multiple math functions
 """
 
 def clamp(num:int, min_value:int, max_value:int):
