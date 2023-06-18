@@ -114,7 +114,6 @@ class MultiPySimpleMenu:
                         delete_lines(lines=os.get_terminal_size().lines - len(self.options)-1)
                     kshandler.deinit()
                     if len(self._printable_options) != 0:
-                        print(self._printable_options)
                         return self._selected_option
                     return None
                 
