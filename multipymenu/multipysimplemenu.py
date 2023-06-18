@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
 import os
-import string
 import re
+from typing import Optional
 from .multipyterminal import print_lines, delete_lines, delete_all_lines, cursor_backwards, is_decodable, clear_terminal, MultiPyKeyStrokes
 from .multipycolors import MultiPyColors, MultiPyStyles, ENDC
 from .multipymath import clamp
 from .special_keys import SpecialKeys
-
 
 @dataclass
 class MultiPySimpleMenu:
@@ -77,7 +76,7 @@ class MultiPySimpleMenu:
         """Check if searching is active by checking the length of the searching buffer"""
         return len(self._searching_buffer) > 0
 
-    def show(self):
+    def show(self) -> Optional[int]:
         """ Displays the menu and handles user interactions.
 
             This method clears the terminal and prints the menu options. It continuously listens for keyboard input from the user.
@@ -114,7 +113,11 @@ class MultiPySimpleMenu:
                         # Delete lines below the menu options
                         delete_lines(lines=os.get_terminal_size().lines - len(self.options)-1)
                     kshandler.deinit()
-                    return self._selected_option
+                    if len(self._printable_options) != 0:
+                        print(self._printable_options)
+                        return self._selected_option
+                    return None
+                
                 elif key == SpecialKeys.ARROW_UP:
                     self._selected_option -= 1
                 elif key == SpecialKeys.ARROW_DOWN:
