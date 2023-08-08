@@ -1,5 +1,5 @@
 # multipymenu
-Python cli menu for python
+Python cli menu for Linux and Windows
 
 # Usage
 No external dependencies are required!
